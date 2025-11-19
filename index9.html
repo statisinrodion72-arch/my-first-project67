@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<title>Гра 21</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f0f0; }
+  #gameArea { border: 2px solid #444; padding: 10px; background-color: #fff; max-width: 500px; }
+  .player, .computer { margin-top: 20px; }
+  .cards { display: flex; gap: 10px; flex-wrap: wrap; }
+  .card { padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #ddf; display:flex; align-items:center; justify-content:center; }
+  .card img { width:50px; height:auto; }
+  #result { margin-top: 20px; font-weight: bold; font-size: 1.1em; }
+</style>
+</head>
+<body>
+
+<h1>Гра 21</h1>
+<div id="gameArea">
+  <div class="player">
+    <h2>Гравець: <span id="playerName"></span></h2>
+    <div class="cards" id="playerCards"></div>
+    <p>Очки: <span id="playerScore">0</span></p>
+  </div>
+  <div class="computer">
+    <h2>Комп'ютер</h2>
+    <div class="cards" id="computerCards"></div>
+    <p>Очки: <span id="computerScore">0</span></p>
+  </div>
+  <button id="nextRound">Розпочати гру!</button>
+  <div id="result"></div>
+</div>
+
+<script>
+  const playerName = prompt("Введіть ваше ім'я:") || "Гравець";
+  document.getElementById('playerName').textContent = playerName;
+  const deck = [
+    { name: "6", value: 6, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Atlas_deck_6_of_hearts.svg/800px-Atlas_deck_6_of_hearts.svg.png" },
+    { name: "7", value: 7, img: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Atlas_deck_7_of_hearts.svg" },
+    { name: "8", value: 8, img: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Atlas_deck_8_of_hearts.svg" },
+    { name: "9", value: 9, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Atlas_deck_9_of_hearts.svg/1365px-Atlas_deck_9_of_hearts.svg.png" },
+    { name: "10", value: 10, img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Atlas_deck_10_of_spades.svg" },
+    { name: "В", value: 2, img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/%D0%90%D1%82%D0%BB%D0%B0%D1%81%D0%BD%D0%B0%D1%8F_%D0%BA%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0_%D1%8D%D0%BA%D1%81%D1%82%D1%80%D0%B0_%D0%B2%D0%B0%D0%BB%D0%B5%D1%82_%D1%87%D0%B5%D1%80%D0%B2%D0%B8.jpg" },
+    { name: "Д", value: 3, img: "https://i.pinimg.com/474x/47/75/7b/47757b94af5b8066a02c44734dec18b0.jpg" },
+    { name: "К", value: 4, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/%D0%90%D1%82%D0%BB%D0%B0%D1%81%D0%BD%D0%B0%D1%8F_%D0%BA%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0_%D0%BA%D0%BE%D1%80%D0%BE%D0%BB%D1%8C_%D1%8D%D0%BA%D1%81%D1%82%D1%80%D0%B0_%D1%82%D1%80%D0%B5%D1%84%D1%8B.jpg/250px-%D0%90%D1%82%D0%BB%D0%B0%D1%81%D0%BD%D0%B0%D1%8F_%D0%BA%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0_%D0%BA%D0%BE%D1%80%D0%BE%D0%BB%D1%8C_%D1%8D%D0%BA%D1%81%D1%82%D1%80%D0%B0_%D1%82%D1%80%D0%B5%D1%84%D1%8B.jpg" },
+    { name: "Туз", value: 11, img: "https://klev.club/uploads/posts/2023-10/1697626768_klev-club-p-risunki-tuz-karta-37.jpg" }
+  ];
+
+  let playerCards = [], computerCards = [];
+  let playerScore = 0, computerScore = 0;
+  let rounds = 0, maxRounds = 3;
+
+  const playerCardsDiv = document.getElementById('playerCards');
+  const computerCardsDiv = document.getElementById('computerCards');
+  const playerScoreSpan = document.getElementById('playerScore');
+  const computerScoreSpan = document.getElementById('computerScore');
+  const resultDiv = document.getElementById('result');
+  const btn = document.getElementById('nextRound');
+
+  function drawCardFromDeck() {
+    return deck[Math.floor(Math.random() * deck.length)];
+  }
+
+  function updateDisplay() {
+    playerCardsDiv.innerHTML = "";
+    playerCards.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const img = document.createElement('img');
+      img.src = c.img;
+      img.alt = c.name;
+      card.appendChild(img);
+      playerCardsDiv.appendChild(card);
+    });
+
+    computerCardsDiv.innerHTML = "";
+    computerCards.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const img = document.createElement('img');
+      img.src = c.img;
+      img.alt = c.name;
+      card.appendChild(img);
+      computerCardsDiv.appendChild(card);
+    });
+
+    playerScoreSpan.textContent = playerScore;
+    computerScoreSpan.textContent = computerScore;
+  }
+
+  function finishGame() {
+    let message = "";
+    if (playerScore > 21 && computerScore > 21) {
+      message = "Обидва програли!";
+    } else if (playerScore > 21) {
+      message = "Занадто велике число!";
+    } else if (computerScore > 21) {
+      message = `Вітаємо ${playerName}, ви виграли!`;
+    } else {
+      if (playerScore > computerScore) {
+        message = `Ви маєте більше число, ${playerName}!`;
+      } else if (playerScore < computerScore) {
+        message = "Занадто багато зради, спробуйте перемогти!";
+      } else {
+        message = "Нічия!";
+      }
+    }
+    resultDiv.textContent = message;
+    btn.disabled = true;
+  }
+
+  btn.addEventListener('click', () => {
+    if (rounds >= maxRounds) return;
+    const pc = drawCardFromDeck();
+    playerCards.push(pc);
+    playerScore += pc.value;
+
+    const cc = drawCardFromDeck();
+    computerCards.push(cc);
+    computerScore += cc.value;
+
+    rounds++;
+    updateDisplay();
+
+    if (playerScore > 21 || computerScore > 21 || rounds === maxRounds) {
+      finishGame();
+    } else {
+      resultDiv.textContent = `Раунд ${rounds} виконано.`;
+    }
+  });
+
+  updateDisplay();
+</script>
+
+</body>
+</html>

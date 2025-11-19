@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Магічна куля</title>
+<style>
+body {
+  margin: 0; padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex; justify-content: center; align-items: center; text-align: center;
+  color: #fff;
+}
+#container {
+  background: rgba(0,0,0,0.5);
+  padding: 30px 20px; border-radius: 20px;
+  max-width: 400px; width: 90%;
+}
+#ball {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 25px auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #88f, #223);
+  box-shadow: inset -10px -15px 25px rgba(0,0,0,0.6),
+              inset 5px 5px 15px rgba(255,255,255,0.3),
+              0 0 20px rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 0 0 10px #fff;
+}
+button {
+  padding: 12px 25px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: #ffb347;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #ffa500;
+}
+#answer {
+  margin-top: 25px;
+  font-size: 1.3em;
+  font-weight: bold;
+  min-height: 70px;
+}
+</style>
+</head>
+<body>
+<div id="container">
+<h1>Магічна куля</h1>
+<div id="ball">?</div>
+<button id="ask">Запитати магічну кулю</button>
+<div id="answer"></div>
+</div>
+<script>
+const responses = [
+  'Звісно!', 'Ні, напевне ні.', 'Можливо.',
+  'Я вважаю так.', 'Сумніваюся.', 'Залежить від вас.',
+  'Безумовно.', 'мої магічні сили кажуть — ні.'
+];
+
+document.getElementById('ask').onclick = () => {
+  const rand = Math.floor(Math.random() * responses.length);
+  document.getElementById('answer').textContent = responses[rand];
+  document.getElementById('ball').textContent = '🔮';
+};
+</script>
+</body>
+</html>

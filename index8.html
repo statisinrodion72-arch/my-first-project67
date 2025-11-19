@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Гра: В кого більше число</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin-top: 50px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+    .player {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 120px;
+    }
+    .score {
+      font-size: 20px;
+      font-weight: bold;
+      color: #007bff;
+    }
+    .number {
+      font-size: 40px;
+      margin: 10px 0;
+    }
+    button {
+      background: limegreen;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Гра: В кого більше число</h1>
+  <h2 id="userName"></h2>
+
+  <div class="container">
+    <div class="player">
+      <div class="score" id="userScore">0</div>
+      <div>Користувач</div>
+      <div class="number" id="userNum">-</div>
+    </div>
+
+    <button id="generateBtn">Generate</button>
+
+    <div class="player">
+      <div class="score" id="compScore">0</div>
+      <div>Комп’ютер</div>
+      <div class="number" id="compNum">-</div>
+    </div>
+  </div>
+
+  <script>
+    let userName = prompt("Введіть ваше ім’я:");
+    while (!userName || userName.trim() === "") {
+      userName = prompt("Будь ласка, введіть коректне ім’я:");
+    }
+    document.getElementById("userName").textContent = "Гравець: " + userName;
+
+    let userScore = 0;
+    let compScore = 0;
+
+    const userScoreEl = document.getElementById("userScore");
+    const compScoreEl = document.getElementById("compScore");
+    const userNumEl = document.getElementById("userNum");
+    const compNumEl = document.getElementById("compNum");
+    const generateBtn = document.getElementById("generateBtn");
+
+    generateBtn.addEventListener("click", () => {
+      const userNum = Math.floor(Math.random() * 10) + 1;
+      const compNum = Math.floor(Math.random() * 10) + 1;
+
+      userNumEl.textContent = userNum;
+      compNumEl.textContent = compNum;
+
+      if (userNum > compNum) {
+        userScore++;
+      } else if (compNum > userNum) {
+        compScore++;
+      }
+
+      userScoreEl.textContent = userScore;
+      compScoreEl.textContent = compScore;
+
+      if (userScore === 3) {
+        alert(`${userName} переміг!`);
+        resetGame();
+      } else if (compScore === 3) {
+        alert("Комп’ютер переміг!");
+        resetGame();
+      }
+    });
+
+    function resetGame() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
